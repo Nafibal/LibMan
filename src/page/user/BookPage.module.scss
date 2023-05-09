@@ -11,6 +11,13 @@
     text-align: center;
     justify-content: center;
 
+    .error {
+      color: rgb(255, 65, 65);
+      font-weight: bold;
+      letter-spacing: 1px;
+      font-size: 1rem;
+    }
+
     p {
       font-size: 2rem;
       margin-bottom: 1rem;

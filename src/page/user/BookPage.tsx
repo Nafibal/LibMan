@@ -15,6 +15,10 @@ import { useForm } from "react-hook-form";
 import { Timestamp } from "@firebase/firestore";
 import ReviewCard from "../../components/user/ReviewCard";
 
+type FormValues = {
+  "due date": Date;
+};
+
 const BookPage = () => {
   const { bookId } = useParams();
   const [book, setBook] = useState<Book>();
@@ -23,9 +27,8 @@ const BookPage = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormValues>();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -48,6 +51,12 @@ const BookPage = () => {
     }
   }, []);
 
+  const handleWishlist = () => {
+    if (book) {
+      addBookToWishist(userId, book);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
@@ -65,7 +74,11 @@ const BookPage = () => {
           <p>
             How long will you borrow the book? <br /> Please enter the date
           </p>
-          <input {...register("due date", { required: true })} type="date" />
+          <input
+            {...register("due date", { required: "Please enter a date!" })}
+            type="date"
+          />
+          <p className={styles.error}>{errors["due date"]?.message}</p>
           <button type="submit">Borrow Book</button>
         </form>
       </Modal>
@@ -82,18 +95,7 @@ const BookPage = () => {
             <button className={styles.genre}>{book?.genre}</button>
           </div>
           <div className={styles.right}>
-            <button
-              onClick={() => {
-                if (book) {
-                  addBookToWishist(userId, book).then(() => {
-                    alert(
-                      `${book.title} is successfully added to your wishlist`
-                    );
-                  });
-                }
-              }}
-              className={styles.titleBtn}
-            >
+            <button onClick={handleWishlist} className={styles.titleBtn}>
               Wishlist
             </button>
             <button

@@ -42,7 +42,7 @@ export const registerUser = async (
     createUser(user.user.uid, username, email, password);
     localStorage.setItem("user", JSON.stringify([user.user.uid, "user"]));
   } catch (error: any) {
-    console.log(error.message);
+    alert(error.message);
   }
 };
 
@@ -55,7 +55,7 @@ export const login = async (email: string, password: string) => {
       JSON.stringify([user.user.uid, userData.role])
     );
   } catch (error: any) {
-    console.log(error.message);
+    alert(error.message);
   }
 };
 
@@ -238,11 +238,18 @@ export const addBookToWishist = async (userId: string, bookData: Book) => {
   const userData = await getUser(userId);
 
   const wishlist = userData.wishlist;
+  if (wishlist.find((item) => item.id == bookData.id)) {
+    alert(`${bookData.title} is already on your wishlist`);
+    return;
+  }
   wishlist.push(bookData);
 
   updateDoc(userDoc, {
     wishlist: wishlist,
   });
+
+  alert(`${bookData.title} is successfully added to your wishlist`);
+  return;
 };
 
 export const updateWishlist = async (userId: string, newWishlist: Book[]) => {
