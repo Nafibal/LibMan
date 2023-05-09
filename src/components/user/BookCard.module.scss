@@ -1,0 +1,27 @@
+@import "../../base.scss";
+.card {
+  padding: 1rem;
+  background-color: $color-primary;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  width: 300px;
+
+  .title {
+    font-size: 1.45rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .author {
+    margin-bottom: 0.25rem;
+  }
+
+  .genre {
+    padding: 0.25rem 0.5rem;
+    background-color: $color-tersiary;
+    width: fit-content;
+    color: black;
+    border-radius: 50px;
+  }
+}

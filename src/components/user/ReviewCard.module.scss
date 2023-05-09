@@ -1,0 +1,27 @@
+@import "../../base.scss";
+.reviewCard {
+  min-width: 200px;
+  max-width: 250px;
+  padding: 1rem;
+  background-color: $color-primary;
+  border-radius: 5px;
+
+  .username {
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+
+  .star_container {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .review {
+    padding: 0.5rem;
+    height: 100px;
+    overflow: auto;
+    border-radius: 5px;
+    background-color: $color-tersiary;
+    color: black;
+  }
+}
