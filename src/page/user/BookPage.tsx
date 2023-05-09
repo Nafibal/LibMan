@@ -28,9 +28,6 @@ const BookPage = () => {
   } = useForm();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -55,6 +52,7 @@ const BookPage = () => {
     <div className={styles.container}>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <form
+          className={styles.return_form}
           onSubmit={handleSubmit((data) => {
             const dueDate = new Date(data["due date"]);
 
@@ -64,8 +62,10 @@ const BookPage = () => {
             });
           })}
         >
-          <label htmlFor="">Due date</label>
-          <input {...register("due date")} type="date" />
+          <p>
+            How long will you borrow the book? <br /> Please enter the date
+          </p>
+          <input {...register("due date", { required: true })} type="date" />
           <button type="submit">Borrow Book</button>
         </form>
       </Modal>
@@ -96,7 +96,20 @@ const BookPage = () => {
             >
               Wishlist
             </button>
-            <button className={styles.titleBtn} onClick={handleOpenModal}>
+            <button
+              className={styles.titleBtn}
+              onClick={() => {
+                if ((book?.["total copies"] as number) > 0) {
+                  setIsModalOpen(true);
+                  return;
+                }
+                alert(
+                  `We're sorry, currently all copies of ${
+                    book?.title as string
+                  } has been borrowed`
+                );
+              }}
+            >
               Borrow
             </button>
           </div>
@@ -116,7 +129,7 @@ const BookPage = () => {
         </div>
         <div className={styles.review_container}>
           {review?.map((item) => {
-            return <ReviewCard review={item} />;
+            return <ReviewCard key={item.id} review={item} />;
           })}
         </div>
       </div>

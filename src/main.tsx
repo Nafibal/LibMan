@@ -6,7 +6,7 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
-import Home from "./page/Home";
+import Home from "./page/user/Home";
 import AdminDashboard from "./layouts/AdminDashboard";
 import UserDashboard from "./layouts/UserDashboard";
 import Login from "./page/Login";

@@ -1,12 +1,14 @@
 import { useForm } from "react-hook-form";
 import styles from "./AddReview.module.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Book, User } from "../../types";
 import { addReview, getBook, getUser } from "../../utils";
 import { Timestamp } from "@firebase/firestore";
 
 const AddReview = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -39,6 +41,9 @@ const AddReview = () => {
               bookId,
               user,
               "review date": Timestamp.fromDate(new Date()),
+            }).then(() => {
+              alert(`Your review has been submitted!`);
+              navigate("/history");
             });
           }
         })}

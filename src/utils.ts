@@ -162,11 +162,6 @@ export const loanBook = async (
     } as User;
 
     if (bookData !== undefined && bookData["total copies"] !== 0) {
-      await updateDoc(bookDocRef, {
-        "total copies": bookData["total copies"] - 1,
-        "borrowed copies": bookData["borrowed copies"] + 1,
-      });
-
       await addDoc(transactionCollectionRef, {
         user: userData,
         book: bookData,
@@ -202,11 +197,6 @@ export const returnBook = async (
   ).data() as Transaction;
 
   if (bookData !== undefined && bookData["borrowed copies"] !== 0) {
-    await updateDoc(bookDocRef, {
-      "total copies": bookData["total copies"] + 1,
-      "borrowed copies": bookData["borrowed copies"] - 1,
-    });
-
     const returnedDate = Timestamp.fromDate(new Date());
 
     await updateDoc(transactionDocRef, {
@@ -330,30 +320,45 @@ export const getUserTransaction = async (
 export const confirmTransaction = async (
   transactionId: string,
   type: "borrow" | "return",
-  confirm: "confirm" | "reject"
+  confirm: "confirm" | "reject",
+  bookId: string
 ) => {
   const transactionDocRef = doc(db, "transactions", transactionId);
+  const bookDocRef = doc(db, "books", bookId);
+
+  const bookData = {
+    ...(await getDoc(bookDocRef)).data(),
+    id: bookId,
+  } as Book;
 
   if (confirm == "confirm") {
     if (type == "borrow") {
       await updateDoc(transactionDocRef, { status: "active" });
+      await updateDoc(bookDocRef, {
+        "total copies": bookData["total copies"] - 1,
+        "borrowed copies": bookData["borrowed copies"] + 1,
+      });
       return;
     }
     if (type == "return") {
       await updateDoc(transactionDocRef, { status: "completed" });
 
       const transactionData = (await getDoc(transactionDocRef)).data();
-      const bookRef = transactionData?.book;
-      if (bookRef) {
-        getDoc(bookRef).then((bookDoc) => {
-          if (bookDoc.exists()) {
-            const bookData = bookDoc.data() as Book;
-            updateBook(bookData.id as string, {
-              "borrowed copies": bookData["borrowed copies"] + 1,
-            });
-          }
-        });
-      }
+      await updateDoc(bookDocRef, {
+        "total copies": bookData["total copies"] + 1,
+        "borrowed copies": bookData["borrowed copies"] - 1,
+      });
+      // const bookRef = transactionData?.book;
+      // if (bookRef) {
+      //   getDoc(bookRef).then((bookDoc) => {
+      //     if (bookDoc.exists()) {
+      //       const bookData = bookDoc.data() as Book;
+      //       updateBook(bookData.id as string, {
+      //         "borrowed copies": bookData["borrowed copies"] + 1,
+      //       });
+      //     }
+      //   });
+      // }
       return;
     }
   }

@@ -47,7 +47,10 @@ const Activities = () => {
                         userId,
                         transaction.book.id as string,
                         transaction.id as string
-                      );
+                      ).then(() => {
+                        alert("submission submitted");
+                        location.reload();
+                      });
                     }}
                   >
                     return

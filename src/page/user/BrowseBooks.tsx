@@ -22,10 +22,10 @@ const BrowseBooks = () => {
   useEffect(() => {
     getBooks(searchTerm).then((res) => {
       const availableBooks: Book[] = res.filter(
-        (book) => book.availability == true
+        (book) => book["total copies"] > 0
       );
 
-      setBooks(res);
+      setBooks(availableBooks);
     });
   }, [searchTerm]);
 
@@ -42,7 +42,7 @@ const BrowseBooks = () => {
       </div>
       <div className={styles.card_container}>
         {books.map((book) => {
-          return <BookCard book={book} />;
+          return <BookCard key={book.id} book={book} />;
         })}
       </div>
     </div>

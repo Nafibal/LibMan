@@ -3,6 +3,7 @@
 .container {
   padding: 1rem 2rem;
   height: 100vh;
+  overflow: auto;
 
   .heading {
     display: flex;
@@ -45,30 +46,4 @@
       }
     }
   }
-
-  // table {
-  //   width: 100%;
-  //   // background-color: $color-primary;
-  //   color: white;
-  //   border: none;
-  //   border-collapse: collapse;
-
-  //   .header {
-  //     background-color: $color-primary;
-
-  //     th {
-  //       padding: 1.25rem 0.2rem;
-  //     }
-  //   }
-
-  //   tbody {
-  //     background-color: $color-secondary;
-  //     text-align: center;
-
-  //     td {
-  //       padding: 1rem 0.2rem;
-  //       border-top: 2px solid $color-tersiary;
-  //     }
-  //   }
-  // }
 }

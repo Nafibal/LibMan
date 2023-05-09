@@ -45,7 +45,6 @@ const ManageRequest = () => {
                 <td>{transaction.user.name}</td>
                 <td>{transaction.book.title}</td>
                 {/* <td>{transaction.status}</td> */}
-                <td>{transaction["transaction type"]}</td>
                 <td>
                   {transaction["transaction date"].toDate().toDateString()}
                 </td>
@@ -56,7 +55,8 @@ const ManageRequest = () => {
                       confirmTransaction(
                         transaction.id as string,
                         transaction["transaction type"],
-                        "confirm"
+                        "confirm",
+                        transaction.book.id as string
                       ).then(() => {
                         alert("Succeed");
                         location.reload();
@@ -70,7 +70,8 @@ const ManageRequest = () => {
                       confirmTransaction(
                         transaction.id as string,
                         transaction["transaction type"],
-                        "reject"
+                        "reject",
+                        transaction.book.id as string
                       ).then(() => {
                         alert("Succeed");
                         location.reload();
@@ -119,7 +120,8 @@ const ManageRequest = () => {
                       confirmTransaction(
                         transaction.id as string,
                         transaction["transaction type"],
-                        "confirm"
+                        "confirm",
+                        transaction.book.id as string
                       ).then(() => {
                         alert("Succeed");
                         location.reload();
@@ -133,7 +135,8 @@ const ManageRequest = () => {
                       confirmTransaction(
                         transaction.id as string,
                         transaction["transaction type"],
-                        "reject"
+                        "reject",
+                        transaction.book.id as string
                       ).then(() => {
                         alert("Succeed");
                         location.reload();

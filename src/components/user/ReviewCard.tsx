@@ -19,10 +19,10 @@ const ReviewCard = ({ review }: Props) => {
       <p className={styles.username}>{review.user.name}</p>
       <div className={styles.star_container}>
         {[...Array(fullStars)].map((_, i) => (
-          <FontAwesomeIcon icon={faStar} color="gold" />
+          <FontAwesomeIcon key={i} icon={faStar} color="gold" />
         ))}
         {[...Array(emptyStars)].map((_, i) => (
-          <FontAwesomeIcon icon={faStar} color="grey" />
+          <FontAwesomeIcon key={i} icon={faStar} color="grey" />
         ))}
       </div>
       <p className={styles.review}>{review.review}</p>
