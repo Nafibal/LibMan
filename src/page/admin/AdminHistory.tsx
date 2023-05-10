@@ -8,9 +8,8 @@ const AdminHistory = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
-    getTransactions().then((res) => {
-      const completed = res.filter((trans) => trans.status == "completed");
-      setTransactions(completed);
+    getTransactions("completed").then((res) => {
+      setTransactions(res);
     });
   }, []);
 
