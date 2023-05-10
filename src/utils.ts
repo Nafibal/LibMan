@@ -148,7 +148,6 @@ export const loanBook = async (
   dueDate: Date
 ) => {
   try {
-    // Get the book document and user document from Firestore
     const bookDocRef = doc(db, "books", bookId);
     const userDocRef = doc(db, "users", userId);
 
@@ -171,7 +170,9 @@ export const loanBook = async (
         "due date": Timestamp.fromDate(dueDate),
       });
     }
-  } catch (error) {}
+  } catch (error: any) {
+    alert(error.message);
+  }
 };
 
 // Return Book
@@ -209,7 +210,7 @@ export const returnBook = async (
       "fine amount": calculateFine(
         transactionData["due date"],
         returnedDate,
-        5
+        10
       ),
     });
   }
@@ -262,7 +263,7 @@ export const updateWishlist = async (userId: string, newWishlist: Book[]) => {
 
 // TRANSACTIONS
 export const getTransactions = async (
-  status?: "active" | "notActive" | "pending"
+  status?: "active" | "notActive" | "pending" | "completed" | "rejected"
 ) => {
   const transactionCollection = await getDocs(transactionCollectionRef);
 
@@ -289,40 +290,42 @@ export const getTransactions = async (
     );
     return notActiveTransaction;
   }
+  if (status == "completed") {
+    const notActiveTransaction = transactions.filter(
+      (trans) => trans.status == "completed"
+    );
+    return notActiveTransaction;
+  }
+  if (status == "rejected") {
+    const notActiveTransaction = transactions.filter(
+      (trans) => trans.status == "rejected"
+    );
+    return notActiveTransaction;
+  }
 
   return transactions;
 };
 
 export const getUserTransaction = async (
   userId: string,
-  status?: "active" | "notActive" | "pending"
+  status?: "active" | "notActive" | "pending" | "completed" | "rejected"
 ) => {
+  if (status) {
+    const transactions = await getTransactions(status);
+    const userTransaction = transactions.filter(
+      (trans) => trans.user.id == userId
+    );
+    return userTransaction;
+  }
+
   const transactions = await getTransactions();
   const userTransaction = transactions.filter(
     (trans) => trans.user.id == userId
   );
 
-  if (status == "active") {
-    const activeTransaction = userTransaction.filter(
-      (trans) => trans.status == "active"
-    );
-    return activeTransaction;
-  }
-  if (status == "pending") {
-    const pendingTransaction = userTransaction.filter(
-      (trans) => trans.status == "pending"
-    );
-    return pendingTransaction;
-  }
-  if (status == "notActive") {
-    const notActiveTransaction = userTransaction.filter(
-      (trans) => trans.status == "completed" || trans.status == "rejected"
-    );
-    return notActiveTransaction;
-  }
-
   return userTransaction;
 };
+
 // Transaction Confirmation by admin
 export const confirmTransaction = async (
   transactionId: string,
@@ -349,23 +352,10 @@ export const confirmTransaction = async (
     }
     if (type == "return") {
       await updateDoc(transactionDocRef, { status: "completed" });
-
-      const transactionData = (await getDoc(transactionDocRef)).data();
       await updateDoc(bookDocRef, {
         "total copies": bookData["total copies"] + 1,
         "borrowed copies": bookData["borrowed copies"] - 1,
       });
-      // const bookRef = transactionData?.book;
-      // if (bookRef) {
-      //   getDoc(bookRef).then((bookDoc) => {
-      //     if (bookDoc.exists()) {
-      //       const bookData = bookDoc.data() as Book;
-      //       updateBook(bookData.id as string, {
-      //         "borrowed copies": bookData["borrowed copies"] + 1,
-      //       });
-      //     }
-      //   });
-      // }
       return;
     }
   }
